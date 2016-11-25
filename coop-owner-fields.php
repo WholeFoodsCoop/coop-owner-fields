@@ -19,6 +19,7 @@ function coopOwnerFieldsDisplay()
     $label = translate('Co-op Owner');
     $value = get_user_meta($userID, 'cof_owner', true);
     $opts = array(0 => translate('No'), 1 => translate('Yes'));
+    $ownerID = get_user_meta($userID, 'cof_cardno', true);
     $select = '';
     foreach ($opts as $id => $o) {
         $select .= sprintf('<option %s value="%d">%s</option>',
@@ -33,6 +34,9 @@ function coopOwnerFieldsDisplay()
         <?php echo $select; ?>
         </select>
     </td>
+    <th><label for="cof_cardno"><?php _e('Owner #'); ?></label></th>
+    <td><input type="number" name="cof_cardno" id="cof_cardno"
+        value="<?php echo $ownerID; ?>" /></td>
 </tr>
 </table>
 <?php
@@ -59,6 +63,15 @@ function coopOwnerFieldsSave($userID)
         } else {
             update_user_meta($userID, 'cof_owner', $value);
         }
+
+        $cardno = (int)$_POST['cof_cardno'];
+        $current = get_user_meta($userID, 'cof_cardno', true);
+        if ($current === false || $current === '') {
+            add_user_meta($userID, 'cof_cardno', $cardno, true);
+        } else {
+            update_user_meta($userID, 'cof_cardn', $cardno);
+        }
+
         $role = get_role('owner');
         if ($role !== 'null' && !current_user_can('administrator') && !current_user_can('editor')) {
             $user = wp_get_current_user();
