@@ -75,7 +75,11 @@ function coopOwnerFieldsSave($userID)
         $role = get_role('owner');
         if ($role !== 'null' && !current_user_can('administrator') && !current_user_can('editor')) {
             $user = wp_get_current_user();
-            $user->set_role('owner');
+            if ($value === 1) {
+                $user->set_role('owner');
+            } else {
+                $user->set_role('customer');
+            }
         }
     }
 }
