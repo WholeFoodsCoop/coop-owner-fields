@@ -84,6 +84,17 @@ function coopOwnerFieldsSave($userID)
     }
 }
 
+function coopRestFilter($resp)
+{
+    $data = $resp->get_data();
+    $data['cof_cardno'] = get_user_meta($data['id'], 'cof_cardno', true);
+    $data['cof_owner'] = get_user_meta($data['id'], 'cof_owner', true);
+    $resp->set_data($data);
+
+    return $resp;
+}
+
 add_action('woocommerce_edit_account_form', 'coopOwnerFieldsDisplay');
 add_action('woocommerce_save_account_details', 'coopOwnerFieldsSave');
+add_filter('woocommerce_rest_prepare_customer', 'coopRestFilter');
 
